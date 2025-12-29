@@ -24,6 +24,12 @@ LANGUAGE_MAP = {
 }
 
 # -----------------------------
+# Session State
+# -----------------------------
+if "query" not in st.session_state:
+    st.session_state.query = ""
+
+# -----------------------------
 # UI Styles
 # -----------------------------
 st.markdown(
@@ -32,10 +38,10 @@ st.markdown(
 
     body {
         background-color: #000000;
-        color: #000000;
+        color: #e5e7eb;
     }
 
-    /* Header */
+    /* Title */
     .title {
         font-size: 2rem;
         font-weight: 700;
@@ -46,15 +52,23 @@ st.markdown(
     .subtitle {
         font-size: 1rem;
         color: #94a3b8;
+        margin-bottom: 1.6rem;
+    }
+
+    /* Suggested questions container */
+    .suggestions {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
         margin-bottom: 1.5rem;
     }
 
-    /* Suggested question boxes */
+    /* Individual suggestion box */
     .suggestion-box {
         border: 1.5px solid #2563eb;
         background-color: #000000;
         color: #2563eb;
-        padding: 14px;
+        padding: 16px;
         border-radius: 8px;
         font-size: 0.9rem;
         height: 90px;
@@ -63,6 +77,7 @@ st.markdown(
         justify-content: center;
         text-align: center;
         cursor: pointer;
+        transition: background 0.2s ease;
     }
 
     .suggestion-box:hover {
@@ -76,12 +91,6 @@ st.markdown(
         font-weight: 600;
         border-radius: 6px;
         padding: 8px 22px;
-    }
-
-    /* Radio buttons */
-    .stRadio label {
-        color: #000000 !important;
-        font-weight: 600;
     }
 
     /* Answer card */
@@ -123,12 +132,9 @@ st.markdown(
 )
 
 # -----------------------------
-# Suggested Questions
+# Suggested Questions (HTML-based, FIXED)
 # -----------------------------
 st.markdown("**Suggested intelligence queries**")
-
-if "query" not in st.session_state:
-    st.session_state.query = ""
 
 suggested_questions = [
     "Which investors actively fund early-stage AI startups in India?",
@@ -137,11 +143,22 @@ suggested_questions = [
     "What signals indicate strong product–market fit for funded startups?"
 ]
 
-cols = st.columns(2)
-for idx, question in enumerate(suggested_questions):
-    with cols[idx % 2]:
-        if st.button(question, key=f"suggest_{idx}"):
-            st.session_state.query = question
+html = "<div class='suggestions'>"
+for q in suggested_questions:
+    html += f"""
+    <form method="post">
+        <button name="suggested" value="{q}" class="suggestion-box">
+            {q}
+        </button>
+    </form>
+    """
+html += "</div>"
+
+st.markdown(html, unsafe_allow_html=True)
+
+# Handle click
+if "suggested" in st.query_params:
+    st.session_state.query = st.query_params["suggested"]
 
 # -----------------------------
 # Language Selector
@@ -162,7 +179,7 @@ query = st.text_input(
 )
 
 # -----------------------------
-# Submit Button
+# Submit
 # -----------------------------
 if st.button("Get Answer"):
     if not query.strip():
@@ -184,15 +201,14 @@ if st.button("Get Answer"):
 with st.expander("How AiVerse works"):
     st.markdown(
         """
-        **AiVerse is a production-grade Retrieval-Augmented Generation (RAG) system.**
+        AiVerse is a production-grade Retrieval-Augmented Generation (RAG) system.
 
-        - Ingests startup, funding, and policy-related documents  
-        - Converts unstructured data into vector embeddings  
-        - Retrieves only the most relevant sources using semantic search  
-        - Generates grounded answers using an LLM with retrieved context  
+        - Ingests startup, funding, and investor documents  
+        - Converts unstructured data into embeddings  
+        - Retrieves only the most relevant sources  
+        - Generates grounded, context-aware insights  
 
-        This architecture minimizes hallucinations and ensures context-aware,
-        verifiable insights for investment decision-making.
+        Designed to minimize hallucinations and support real investment decisions.
         """
     )
 
