@@ -35,88 +35,54 @@ if "query" not in st.session_state:
 st.markdown(
     """
     <style>
-
     body {
         background-color: #000000;
         color: #e5e7eb;
     }
 
-    /* Title */
     .title {
         font-size: 2rem;
         font-weight: 700;
         color: #2563eb;
-        margin-bottom: 0.3rem;
     }
 
     .subtitle {
-        font-size: 1rem;
         color: #94a3b8;
-        margin-bottom: 1.6rem;
-    }
-
-    /* Suggested questions container */
-    .suggestions {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 14px;
         margin-bottom: 1.5rem;
     }
 
-    /* Individual suggestion box */
-    .suggestion-box {
-        border: 1.5px solid #2563eb;
-        background-color: #000000;
-        color: #2563eb;
-        padding: 16px;
+    /* Suggested question buttons */
+    div.stButton > button {
+        background-color: #000000 !important;
+        color: #2563eb !important;
+        border: 1.5px solid #2563eb !important;
         border-radius: 8px;
-        font-size: 0.9rem;
         height: 90px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        cursor: pointer;
-        transition: background 0.2s ease;
+        width: 100%;
+        font-size: 0.9rem;
+        font-weight: 500;
+        white-space: normal;
     }
 
-    .suggestion-box:hover {
-        background-color: #020617;
-    }
-
-    /* Buttons */
-    .stButton>button {
-        background-color: #2563eb;
-        color: white;
-        font-weight: 600;
-        border-radius: 6px;
-        padding: 8px 22px;
+    div.stButton > button:hover {
+        background-color: #020617 !important;
     }
 
     /* Answer card */
     .answer-card {
         border: 1px solid #2563eb;
+        background-color: #020617;
         border-radius: 10px;
         padding: 18px;
-        background-color: #020617;
-        color: #e5e7eb;
         margin-top: 1rem;
     }
 
-    /* Footer */
     .footer {
         text-align: center;
         color: #2563eb;
         font-size: 0.85rem;
         margin-top: 2rem;
     }
-
-    .disclaimer {
-        font-size: 0.75rem;
-        color: #94a3b8;
-        margin-top: 1rem;
-    }
-
     </style>
     """,
     unsafe_allow_html=True
@@ -132,33 +98,28 @@ st.markdown(
 )
 
 # -----------------------------
-# Suggested Questions (HTML-based, FIXED)
+# Suggested Questions
 # -----------------------------
 st.markdown("**Suggested intelligence queries**")
 
-suggested_questions = [
-    "Which investors actively fund early-stage AI startups in India?",
-    "What funding trends are emerging in Indian FinTech startups?",
-    "Which VCs have invested in similar startups over the last 2 years?",
-    "What signals indicate strong product–market fit for funded startups?"
-]
+q1, q2 = st.columns(2)
+q3, q4 = st.columns(2)
 
-html = "<div class='suggestions'>"
-for q in suggested_questions:
-    html += f"""
-    <form method="post">
-        <button name="suggested" value="{q}" class="suggestion-box">
-            {q}
-        </button>
-    </form>
-    """
-html += "</div>"
+with q1:
+    if st.button("Which investors actively fund early-stage AI startups in India?"):
+        st.session_state.query = "Which investors actively fund early-stage AI startups in India?"
 
-st.markdown(html, unsafe_allow_html=True)
+with q2:
+    if st.button("What funding trends are emerging in Indian FinTech startups?"):
+        st.session_state.query = "What funding trends are emerging in Indian FinTech startups?"
 
-# Handle click
-if "suggested" in st.query_params:
-    st.session_state.query = st.query_params["suggested"]
+with q3:
+    if st.button("Which VCs have invested in similar startups over the last 2 years?"):
+        st.session_state.query = "Which VCs have invested in similar startups over the last 2 years?"
+
+with q4:
+    if st.button("What signals indicate strong product–market fit for funded startups?"):
+        st.session_state.query = "What signals indicate strong product–market fit for funded startups?"
 
 # -----------------------------
 # Language Selector
@@ -185,7 +146,7 @@ if st.button("Get Answer"):
     if not query.strip():
         st.warning("Please enter a question.")
     else:
-        with st.spinner("Analyzing data and retrieving insights..."):
+        with st.spinner("Analyzing investment intelligence..."):
             lang_code = LANGUAGE_MAP.get(language, "en")
             answer = generate_answer(query, language=lang_code)
 
@@ -199,29 +160,13 @@ if st.button("Get Answer"):
 # How it works
 # -----------------------------
 with st.expander("How AiVerse works"):
-    st.markdown(
+    st.write(
         """
-        AiVerse is a production-grade Retrieval-Augmented Generation (RAG) system.
-
-        - Ingests startup, funding, and investor documents  
-        - Converts unstructured data into embeddings  
-        - Retrieves only the most relevant sources  
-        - Generates grounded, context-aware insights  
-
-        Designed to minimize hallucinations and support real investment decisions.
+        AiVerse is a Retrieval-Augmented Generation (RAG) system that ingests
+        startup, funding, and investor data, retrieves relevant evidence, and
+        generates grounded insights to support founders and VCs.
         """
     )
-
-# -----------------------------
-# Disclaimer
-# -----------------------------
-st.markdown(
-    "<div class='disclaimer'>"
-    "Disclaimer: AiVerse provides AI-generated insights based on available data. "
-    "It does not constitute financial or investment advice."
-    "</div>",
-    unsafe_allow_html=True
-)
 
 # -----------------------------
 # Footer
