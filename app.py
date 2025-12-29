@@ -5,9 +5,10 @@ from rag.generator import generate_answer
 # Page Config
 # -----------------------------
 st.set_page_config(
-    page_title="AiVerse – Intelligent Policy Assistant",
+    page_title="AiVerse – AI Investment Intelligence",
     page_icon="🧠",
-    layout="centered"
+    layout="centered",
+    initial_sidebar_state="collapsed"
 )
 
 # -----------------------------
@@ -23,71 +24,88 @@ LANGUAGE_MAP = {
 }
 
 # -----------------------------
-# UI Styles (Black + Blue only)
+# UI Styles
 # -----------------------------
 st.markdown(
     """
     <style>
+
     body {
-        background-color: #ffffff;
+        background-color: #000000;
         color: #000000;
     }
 
+    /* Header */
     .title {
-        color: #2563eb;
-        font-size: 2.2rem;
+        font-size: 2rem;
         font-weight: 700;
+        color: #2563eb;
         margin-bottom: 0.3rem;
     }
 
     .subtitle {
-        color: #1e3a8a;
         font-size: 1rem;
-        margin-bottom: 1.8rem;
+        color: #94a3b8;
+        margin-bottom: 1.5rem;
     }
 
-    .chip {
-        display: inline-block;
-        padding: 6px 14px;
-        margin: 6px 6px 0 0;
-        border: 1px solid #2563eb;
-        border-radius: 20px;
+    /* Suggested question boxes */
+    .suggestion-box {
+        border: 1.5px solid #2563eb;
+        background-color: #000000;
         color: #2563eb;
-        font-size: 0.85rem;
+        padding: 14px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        height: 90px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
         cursor: pointer;
     }
 
-    .chip:hover {
-        background-color: #2563eb;
-        color: #ffffff;
+    .suggestion-box:hover {
+        background-color: #020617;
     }
 
-    .answer-card {
-        border: 1px solid #2563eb;
-        border-radius: 8px;
-        padding: 16px;
-        background-color: #f9fbff;
-        margin-top: 12px;
-    }
-
-    .answer-title {
-        color: #2563eb;
-        font-weight: 600;
-        margin-bottom: 8px;
-    }
-
-    .disclaimer {
-        font-size: 0.8rem;
-        color: #1e3a8a;
-        margin-top: 10px;
-    }
-
+    /* Buttons */
     .stButton>button {
         background-color: #2563eb;
         color: white;
         font-weight: 600;
         border-radius: 6px;
         padding: 8px 22px;
+    }
+
+    /* Radio buttons */
+    .stRadio label {
+        color: #000000 !important;
+        font-weight: 600;
+    }
+
+    /* Answer card */
+    .answer-card {
+        border: 1px solid #2563eb;
+        border-radius: 10px;
+        padding: 18px;
+        background-color: #020617;
+        color: #e5e7eb;
+        margin-top: 1rem;
+    }
+
+    /* Footer */
+    .footer {
+        text-align: center;
+        color: #2563eb;
+        font-size: 0.85rem;
+        margin-top: 2rem;
+    }
+
+    .disclaimer {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        margin-top: 1rem;
     }
 
     </style>
@@ -98,31 +116,32 @@ st.markdown(
 # -----------------------------
 # Header
 # -----------------------------
-st.markdown("<div class='title'>AiVerse – Intelligent Policy Assistant</div>", unsafe_allow_html=True)
+st.markdown("<div class='title'>AiVerse – AI Investment Intelligence Analyst</div>", unsafe_allow_html=True)
 st.markdown(
-    "<div class='subtitle'>Ask questions from policy documents using AI-powered retrieval</div>",
+    "<div class='subtitle'>Turn fragmented startup and funding data into actionable intelligence for founders and VCs</div>",
     unsafe_allow_html=True
 )
 
 # -----------------------------
-# Suggested Question Chips
+# Suggested Questions
 # -----------------------------
-st.markdown("**Suggested questions**")
-
-suggested_questions = [
-    "What are the biggest risks for startups in India?",
-    "What policies support MSMEs in India?",
-    "What are the major challenges in Indian FinTech?",
-    "How does the government support early-stage startups?"
-]
+st.markdown("**Suggested intelligence queries**")
 
 if "query" not in st.session_state:
     st.session_state.query = ""
 
-cols = st.columns(len(suggested_questions))
-for i, q in enumerate(suggested_questions):
-    if cols[i].button(q):
-        st.session_state.query = q
+suggested_questions = [
+    "Which investors actively fund early-stage AI startups in India?",
+    "What funding trends are emerging in Indian FinTech startups?",
+    "Which VCs have invested in similar startups over the last 2 years?",
+    "What signals indicate strong product–market fit for funded startups?"
+]
+
+cols = st.columns(2)
+for idx, question in enumerate(suggested_questions):
+    with cols[idx % 2]:
+        if st.button(question, key=f"suggest_{idx}"):
+            st.session_state.query = question
 
 # -----------------------------
 # Language Selector
@@ -139,7 +158,7 @@ language = st.radio(
 query = st.text_input(
     "Enter your question",
     value=st.session_state.query,
-    placeholder="Type your question here..."
+    placeholder="Ask about investors, funding trends, or startup intelligence..."
 )
 
 # -----------------------------
@@ -149,47 +168,50 @@ if st.button("Get Answer"):
     if not query.strip():
         st.warning("Please enter a question.")
     else:
-        with st.spinner("Processing your query..."):
+        with st.spinner("Analyzing data and retrieving insights..."):
             lang_code = LANGUAGE_MAP.get(language, "en")
             answer = generate_answer(query, language=lang_code)
 
+        st.markdown("### Generated Insight")
         st.markdown(
-            f"""
-            <div class="answer-card">
-                <div class="answer-title">AI-Generated Answer</div>
-                <div>{answer}</div>
-                <div class="disclaimer">
-                    This response is generated from retrieved policy documents and may not replace official or legal guidance.
-                </div>
-            </div>
-            """,
+            f"<div class='answer-card'>{answer}</div>",
             unsafe_allow_html=True
         )
 
 # -----------------------------
-# How It Works (Expandable)
+# How it works
 # -----------------------------
 with st.expander("How AiVerse works"):
     st.markdown(
         """
-        **AiVerse** uses a Retrieval-Augmented Generation (RAG) pipeline:
+        **AiVerse is a production-grade Retrieval-Augmented Generation (RAG) system.**
 
-        • Policy documents are ingested and cleaned  
-        • Text is embedded using open-source language models  
-        • FAISS vector search retrieves relevant content  
-        • Answers are synthesized and translated if needed  
+        - Ingests startup, funding, and policy-related documents  
+        - Converts unstructured data into vector embeddings  
+        - Retrieves only the most relevant sources using semantic search  
+        - Generates grounded answers using an LLM with retrieved context  
 
-        This ensures responses are **grounded in real documents**, not hallucinated.
+        This architecture minimizes hallucinations and ensures context-aware,
+        verifiable insights for investment decision-making.
         """
     )
+
+# -----------------------------
+# Disclaimer
+# -----------------------------
+st.markdown(
+    "<div class='disclaimer'>"
+    "Disclaimer: AiVerse provides AI-generated insights based on available data. "
+    "It does not constitute financial or investment advice."
+    "</div>",
+    unsafe_allow_html=True
+)
 
 # -----------------------------
 # Footer
 # -----------------------------
 st.markdown("---")
 st.markdown(
-    "<div style='text-align:center; color:#2563eb; font-size:0.85rem;'>"
-    "© 2025 AiVerse | Powered by LangChain & Open-Source AI Models"
-    "</div>",
+    "<div class='footer'>© 2025 AiVerse | Powered by LangChain & Open-Source AI Models</div>",
     unsafe_allow_html=True
 )
