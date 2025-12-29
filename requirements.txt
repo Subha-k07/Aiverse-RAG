@@ -1,43 +1,30 @@
-# Core Python
+# Core
 numpy
 pandas
 
-# LangChain ecosystem
-langchain>=0.1.20
-langchain-core>=0.1.52
-langchain-community>=0.0.38
+# LangChain (RAG)
+langchain
+langchain-core
+langchain-community
 
-# Embeddings & LLMs
-sentence-transformers
-transformers
-torch
-
-# Vector Store
+# Vector store (CPU safe)
 faiss-cpu
 
-# Document loading
+# Document loaders
 pypdf
 beautifulsoup4
 lxml
 requests
 
-# Language detection
+# Language detection + translation
 langdetect
 deep-translator
 
-# Serialization
-pickle-mixin
-
-# Backend API
+# Backend utils
 flask
 flask-cors
+python-dotenv
+tqdm
 
 # Frontend
 streamlit
-
-# Utilities
-tqdm
-python-dotenv
-
-# LLaMA / Ollama interface
-ollama
