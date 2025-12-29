@@ -1,0 +1,41 @@
+# Core Python
+numpy
+pandas
+
+# LangChain ecosystem
+langchain>=0.1.20
+langchain-core>=0.1.52
+langchain-community>=0.0.38
+
+# Embeddings & LLMs (local / open-source friendly)
+sentence-transformers
+transformers
+torch
+
+# Vector Store
+faiss-cpu
+
+# Document loading
+pypdf
+beautifulsoup4
+lxml
+requests
+
+# Language detection
+langdetect
+
+# Serialization
+pickle-mixin
+
+# Backend API
+flask
+flask-cors
+
+# Frontend (optional, if you choose Streamlit)
+streamlit
+
+# Utilities
+tqdm
+python-dotenv
+
+ollama

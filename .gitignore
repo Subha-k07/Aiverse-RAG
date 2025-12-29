@@ -1,0 +1,16 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Environment files
+.env
+
+# Vector stores / local data (optional)
+vectorstore/
+data/
+
+# OS files
+.DS_Store
+Thumbs.db
+
