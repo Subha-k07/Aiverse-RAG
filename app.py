@@ -50,12 +50,12 @@ st.markdown(
         margin-bottom: 20px;
     }
 
-    /* Radio text color and size */
-    div[role="radiogroup"] label {
-        color: #000000 !important;
+    /* Fix radio button text visibility */
+    div[role="radiogroup"] label span {
+        color: #000000 !important;   /* black text */
         font-weight: 600;
         font-size: 1em;
-        padding: 5px 15px;
+        padding-left: 5px;
     }
 
     /* Radio circle color */
@@ -63,10 +63,10 @@ st.markdown(
         accent-color: #2563eb;
         width: 18px;
         height: 18px;
-        margin-right: 8px;
+        margin-right: 5px;
     }
 
-    /* Make radio options horizontally spaced */
+    /* Space out radio options horizontally */
     div[role="radiogroup"] > label {
         display: inline-flex;
         align-items: center;
