@@ -1,34 +1,32 @@
 import os
 from typing import List
-from googletrans import Translator  # for Indic language query handling
 
+from deep_translator import GoogleTranslator
 from retriever import retrieve, Document
-
-# -----------------------------
-# Translator Setup (Optional)
-# -----------------------------
-translator = Translator()
 
 # -----------------------------
 # Answer Generator
 # -----------------------------
-def generate_answer(query: str, language: str = None, max_chunks: int = 5) -> str:
+def generate_answer(query: str, language: str = "en", max_chunks: int = 5) -> str:
     """
     Generates a clean, concise answer from retrieved chunks with citations.
-    
+
     Args:
         query (str): User query
-        language (str): Optional, user language code (e.g., 'hi' for Hindi)
+        language (str): User language code (e.g., 'hi', 'ta', 'en')
         max_chunks (int): Number of chunks to retrieve
-    
+
     Returns:
         str: Synthesized answer with citations
     """
 
+    user_lang = language or "en"
+
     # Step 1: Translate query to English if needed
-    user_lang = language
-    if language and language != "en":
-        translated_query = translator.translate(query, src=language, dest="en").text
+    if user_lang != "en":
+        translated_query = GoogleTranslator(
+            source=user_lang, target="en"
+        ).translate(query)
     else:
         translated_query = query
 
@@ -40,29 +38,39 @@ def generate_answer(query: str, language: str = None, max_chunks: int = 5) -> st
 
     # Step 3: Synthesize answer
     answer_lines = []
-    seen_texts = set()  # to avoid duplicates
+    seen_texts = set()
 
-    for i, doc in enumerate(docs, 1):
+    for doc in docs:
         text = doc.page_content.strip()
-        # Simple deduplication
+
         if text in seen_texts:
             continue
         seen_texts.add(text)
 
-        # Split into sentences for inline citation
-        sentences = [s.strip() for s in text.split('.') if len(s.strip()) > 10]
-        for s in sentences:
-            answer_lines.append(f"{s.strip()}. (Source: {os.path.basename(doc.metadata.get('source',''))})")
+        source = os.path.basename(doc.metadata.get("source", "unknown"))
 
-    # Step 4: Join top N sentences (limit length)
+        sentences = [
+            s.strip() for s in text.split(".")
+            if len(s.strip()) > 10
+        ]
+
+        for sentence in sentences:
+            answer_lines.append(
+                f"{sentence}. (Source: {source})"
+            )
+
+    # Step 4: Limit output size
     MAX_SENTENCES = 6
     answer = "\n".join(answer_lines[:MAX_SENTENCES])
 
     # Step 5: Translate answer back to user language if needed
-    if user_lang and user_lang != "en":
-        answer = translator.translate(answer, src="en", dest=user_lang).text
+    if user_lang != "en":
+        answer = GoogleTranslator(
+            source="en", target=user_lang
+        ).translate(answer)
 
     return answer
+
 
 # -----------------------------
 # Interactive CLI
@@ -71,20 +79,22 @@ def main():
     print("🟢 RAG Generator - Level 5")
     print("Type 'exit' to quit.\n")
 
-    user_lang = input("Enter your language code (en for English, hi for Hindi, etc.): ").strip().lower()
-    if user_lang == "":
-        user_lang = "en"
+    user_lang = input(
+        "Enter your language code (en for English, hi for Hindi, etc.): "
+    ).strip().lower() or "en"
 
     while True:
         query = input("\n🧠 Enter your query: ").strip()
-        if query.lower() in ["exit", "quit"]:
+
+        if query.lower() in {"exit", "quit"}:
             print("Exiting...")
             break
 
         print("\n📌 Generating answer...\n")
         answer = generate_answer(query, language=user_lang)
         print(answer)
-        print("\n" + "-"*80)
+        print("\n" + "-" * 80)
+
 
 # -----------------------------
 # Entry Point
