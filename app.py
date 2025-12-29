@@ -33,28 +33,39 @@ st.markdown(
         background-color: #ffffff;
         color: #000000;
     }
+
     .header {
         color: #2563eb;
         font-size: 2.2em;
         font-weight: bold;
         margin-bottom: 10px;
     }
+
     .subheader {
         color: #1e3a8a;
         font-size: 1em;
         margin-bottom: 20px;
     }
+
+    /* Radio text color */
+    div[role="radiogroup"] label {
+        color: #000000 !important;
+        font-weight: 500;
+    }
+
+    /* Radio circle visibility */
+    div[role="radiogroup"] input[type="radio"] {
+        accent-color: #2563eb;
+    }
+
     .stButton>button {
         background-color: #2563eb;
         color: white;
         font-weight: bold;
     }
-    .stRadio>div {
-        flex-direction: row;
-        gap: 10px;
-    }
     </style>
-    """, unsafe_allow_html=True
+    """,
+    unsafe_allow_html=True
 )
 
 # -----------------------------
