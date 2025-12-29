@@ -51,15 +51,15 @@ st.markdown(
     }
 
     /* Fix radio button text visibility */
-    div[role="radiogroup"] label span {
+    div[data-testid="stRadio"] label, 
+    div[data-testid="stRadio"] div[role="radio"] > span {
         color: #000000 !important;   /* black text */
         font-weight: 600;
         font-size: 1em;
-        padding-left: 5px;
     }
 
     /* Radio circle color */
-    div[role="radiogroup"] input[type="radio"] {
+    div[data-testid="stRadio"] input[type="radio"] {
         accent-color: #2563eb;
         width: 18px;
         height: 18px;
@@ -67,7 +67,7 @@ st.markdown(
     }
 
     /* Space out radio options horizontally */
-    div[role="radiogroup"] > label {
+    div[data-testid="stRadio"] > label {
         display: inline-flex;
         align-items: center;
         margin-right: 20px;
