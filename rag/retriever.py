@@ -23,8 +23,6 @@ def get_embeddings():
 # Load FAISS
 # -----------------------------
 def load_vectorstore():
-    print("📁 Loading FAISS from:", VECTORSTORE_DIR)
-
     embeddings = get_embeddings()
 
     vectorstore = FAISS.load_local(
@@ -32,7 +30,6 @@ def load_vectorstore():
         embeddings,
         allow_dangerous_deserialization=True
     )
-
     return vectorstore
 
 # -----------------------------
