@@ -7,7 +7,7 @@ langchain>=0.1.20
 langchain-core>=0.1.52
 langchain-community>=0.0.38
 
-# Embeddings & LLMs (local / open-source friendly)
+# Embeddings & LLMs
 sentence-transformers
 transformers
 torch
@@ -23,6 +23,7 @@ requests
 
 # Language detection
 langdetect
+googletrans==4.0.0-rc1
 
 # Serialization
 pickle-mixin
@@ -31,11 +32,12 @@ pickle-mixin
 flask
 flask-cors
 
-# Frontend (optional, if you choose Streamlit)
+# Frontend
 streamlit
 
 # Utilities
 tqdm
 python-dotenv
 
+# LLaMA / Ollama interface
 ollama
