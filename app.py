@@ -32,34 +32,15 @@ LANGUAGE_MAP = {
 st.markdown(
     """
     <style>
-    .stApp {
-        background-color: #ffffff;
-        color: #000000;
-    }
-
-    .header {
-        color: #2563eb;
-        font-size: 2.2em;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-
-    .subheader {
-        color: #1e3a8a;
-        font-size: 1em;
-        margin-bottom: 20px;
-    }
-
-    /* Fix radio button text visibility */
-    div[data-testid="stRadio"] label, 
-    div[data-testid="stRadio"] div[role="radio"] > span {
-        color: #000000 !important;   /* black text */
+    /* Radio label text */
+    .css-1kyxreq span {
+        color: #000000 !important;  /* black text */
         font-weight: 600;
         font-size: 1em;
     }
 
-    /* Radio circle color */
-    div[data-testid="stRadio"] input[type="radio"] {
+    /* Radio circle */
+    .css-1kyxreq input[type="radio"] {
         accent-color: #2563eb;
         width: 18px;
         height: 18px;
@@ -67,10 +48,9 @@ st.markdown(
     }
 
     /* Space out radio options horizontally */
-    div[data-testid="stRadio"] > label {
-        display: inline-flex;
-        align-items: center;
-        margin-right: 20px;
+    .css-1kyxreq {
+        display: flex;
+        gap: 20px;
     }
 
     .stButton>button {
