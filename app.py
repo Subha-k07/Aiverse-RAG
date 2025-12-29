@@ -1,7 +1,9 @@
 import streamlit as st
 from rag.generator import generate_answer
 
-# -------------------- Page Config --------------------
+# -----------------------------
+# Page Config
+# -----------------------------
 st.set_page_config(
     page_title="AiVerse RAG",
     page_icon="🧠",
@@ -9,79 +11,94 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# -------------------- Custom CSS --------------------
+# -----------------------------
+# Language Mapping
+# -----------------------------
+LANGUAGE_MAP = {
+    "English": "en",
+    "தமிழ்": "ta",
+    "हिन्दी": "hi",
+    "తెలుగు": "te",
+    "മലയാളം": "ml",
+    "ಕನ್ನಡ": "kn"
+}
+
+# -----------------------------
+# UI Styles
+# -----------------------------
 st.markdown(
     """
     <style>
-    /* Body background & text */
-    .reportview-container {
+    .stApp {
         background-color: #ffffff;
-        color: #1e293b;
+        color: #000000;
     }
-
-    /* Header styling */
-    h1 {
+    .header {
         color: #2563eb;
-        font-family: 'Segoe UI', sans-serif;
-        font-weight: 700;
+        font-size: 2.2em;
+        font-weight: bold;
+        margin-bottom: 10px;
     }
-
-    /* Buttons */
-    div.stButton > button:first-child {
+    .subheader {
+        color: #1e3a8a;
+        font-size: 1em;
+        margin-bottom: 20px;
+    }
+    .stButton>button {
         background-color: #2563eb;
         color: white;
-        border-radius: 8px;
-        height: 40px;
-        width: 120px;
-        font-size: 16px;
+        font-weight: bold;
     }
-    div.stButton > button:hover {
-        background-color: #1d4ed8;
-        color: white;
-    }
-
-    /* Language radio buttons */
-    .stRadio > label {
-        font-weight: 600;
+    .stRadio>div {
+        flex-direction: row;
+        gap: 10px;
     }
     </style>
-    """,
-    unsafe_allow_html=True
+    """, unsafe_allow_html=True
 )
 
-# -------------------- Header --------------------
-st.markdown("<h1>AiVerse – Intelligent Policy Assistant</h1>", unsafe_allow_html=True)
-st.caption("Ask questions from policy documents using AI-powered retrieval")
+# -----------------------------
+# Header
+# -----------------------------
+st.markdown("<div class='header'>AiVerse – Intelligent Policy Assistant</div>", unsafe_allow_html=True)
+st.markdown("<div class='subheader'>Ask questions from policy documents using AI-powered retrieval</div>", unsafe_allow_html=True)
 
-# -------------------- Language Selector --------------------
+# -----------------------------
+# Language Selector
+# -----------------------------
 language = st.radio(
-    "Select language:",
-    ["English", "தமிழ்", "हिन्दी", "తెలుగు", "മലയാളം", "ಕನ್ನಡ"],
+    "Select language",
+    list(LANGUAGE_MAP.keys()),
     horizontal=True
 )
 
-# -------------------- User Query Input --------------------
+# -----------------------------
+# Query Input
+# -----------------------------
 query = st.text_input(
-    "Enter your question:",
+    "Enter your question",
     placeholder="Type your question here..."
 )
 
-# -------------------- Process Query --------------------
+# -----------------------------
+# Submit Button
+# -----------------------------
 if st.button("Get Answer"):
     if not query.strip():
         st.warning("Please enter a question.")
     else:
-        with st.spinner("Generating answer..."):
-            try:
-                answer = generate_answer(query, language=language)
-                if answer:
-                    st.markdown("### 📌 Answer")
-                    st.success(answer)
-                else:
-                    st.warning("No answer found. Try rephrasing your question.")
-            except Exception as e:
-                st.error(f"Error: {e}")
-
-# -------------------- Footer --------------------
-st.markdown("---")
-st.caption("© 2025 AiVerse | Powered by LangChain & Open-Source AI models")
+        with st.spinner("Thinking..."):
+            lang_code = LANGUAGE_MAP.get(language, "en")
+            answer = generate_answer(query, language=lang_code)
+        st.markdown("### 📌 Answer")
+        st.write(answer)
+# -----------------------------
+# Footer
+# -----------------------------
+st.markdown("---")  # horizontal separator
+st.markdown(
+    "<div style='text-align:center; color:#2563eb; font-size:0.85em;'>"
+    "© 2025 AiVerse | Powered by LangChain & Open-Source AI models"
+    "</div>",
+    unsafe_allow_html=True
+)
