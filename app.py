@@ -83,6 +83,20 @@ st.markdown(
         font-size: 0.85rem;
         margin-top: 2rem;
     }
+    <div style="
+        margin-top: 12px;
+        font-size: 0.8rem;
+        color: #94a3b8;
+        border-left: 3px solid #2563eb;
+        padding-left: 10px;
+    ">
+    <strong>Disclaimer:</strong><br>
+    This insight is generated using publicly available startup, policy, and funding data
+    processed via an AI-powered retrieval system. The information provided is for
+    <em>research and informational purposes only</em> and should not be considered
+    financial, legal, or investment advice.
+    </div>
+    
     </style>
     """,
     unsafe_allow_html=True
