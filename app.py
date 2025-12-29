@@ -26,6 +26,9 @@ LANGUAGE_MAP = {
 # -----------------------------
 # UI Styles
 # -----------------------------
+# -----------------------------
+# UI Styles
+# -----------------------------
 st.markdown(
     """
     <style>
@@ -47,26 +50,41 @@ st.markdown(
         margin-bottom: 20px;
     }
 
-    /* Radio text color */
+    /* Radio text color and size */
     div[role="radiogroup"] label {
         color: #000000 !important;
-        font-weight: 500;
+        font-weight: 600;
+        font-size: 1em;
+        padding: 5px 15px;
     }
 
-    /* Radio circle visibility */
+    /* Radio circle color */
     div[role="radiogroup"] input[type="radio"] {
         accent-color: #2563eb;
+        width: 18px;
+        height: 18px;
+        margin-right: 8px;
+    }
+
+    /* Make radio options horizontally spaced */
+    div[role="radiogroup"] > label {
+        display: inline-flex;
+        align-items: center;
+        margin-right: 20px;
     }
 
     .stButton>button {
         background-color: #2563eb;
         color: white;
         font-weight: bold;
+        border-radius: 6px;
+        padding: 8px 20px;
     }
     </style>
     """,
     unsafe_allow_html=True
 )
+
 
 # -----------------------------
 # Header
