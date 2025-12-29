@@ -2,8 +2,8 @@ import os
 from typing import List
 
 from langchain_community.vectorstores import FAISS
-from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_core.documents import Document   # ✅ FIXED IMPORT
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_core.documents import Document
 
 # -----------------------------
 # Paths
@@ -24,7 +24,6 @@ def get_embeddings():
 # -----------------------------
 def load_vectorstore():
     print("📁 Loading FAISS from:", VECTORSTORE_DIR)
-    print("📄 Files:", os.listdir(VECTORSTORE_DIR))
 
     embeddings = get_embeddings()
 
@@ -47,10 +46,8 @@ def retrieve(query: str, language: str = "en", k: int = 5) -> List[Document]:
         search_kwargs={"k": k}
     )
 
-    # ✅ New LangChain API
     docs = retriever.invoke(query)
 
-    # Optional language filtering
     if language:
         docs = [
             doc for doc in docs
@@ -58,19 +55,3 @@ def retrieve(query: str, language: str = "en", k: int = 5) -> List[Document]:
         ]
 
     return docs
-
-# -----------------------------
-# Test
-# -----------------------------
-if __name__ == "__main__":
-    query = "What is artificial intelligence?"
-
-    results = retrieve(query)
-
-    print(f"\n🔍 Retrieved {len(results)} documents\n")
-
-    for i, doc in enumerate(results, 1):
-        print(f"--- Chunk {i} ---")
-        print(doc.page_content[:300])
-        print("Metadata:", doc.metadata)
-        print()
