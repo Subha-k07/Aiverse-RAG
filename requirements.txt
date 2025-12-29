@@ -2,13 +2,19 @@
 numpy
 pandas
 
-# LangChain (RAG)
+# LangChain ecosystem
 langchain
 langchain-core
 langchain-community
+langchain-huggingface
 
-# Vector store (CPU safe)
+# Embeddings / Vector store
 faiss-cpu
+
+# Transformers
+sentence-transformers
+transformers
+torch
 
 # Document loaders
 pypdf
@@ -16,11 +22,11 @@ beautifulsoup4
 lxml
 requests
 
-# Language detection + translation
+# Language utilities
 langdetect
 deep-translator
 
-# Backend utils
+# Backend helpers
 flask
 flask-cors
 python-dotenv
