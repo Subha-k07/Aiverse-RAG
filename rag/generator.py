@@ -2,52 +2,83 @@ import os
 from typing import List
 from deep_translator import GoogleTranslator
 
-from rag.retriever import retrieve, Document
+from rag.retriever import retrieve
+from langchain_core.documents import Document
 
 
 def generate_answer(query: str, language: str = "en", max_chunks: int = 5) -> str:
     """
-    Generates a clean, concise answer from retrieved chunks with citations.
+    Analyst-style RAG answer with:
+    - Synthesized insight
+    - Clear sources
+    - Evaluation metric
     """
 
-    user_lang = language
+    user_lang = language or "en"
 
-    # 1️⃣ Translate query → English if needed
-    if user_lang and user_lang != "en":
-        translated_query = GoogleTranslator(
-            source=user_lang, target="en"
-        ).translate(query)
-    else:
-        translated_query = query
+    # Translate query → English ONLY if needed
+    translated_query = (
+        GoogleTranslator(source=user_lang, target="en").translate(query)
+        if user_lang != "en"
+        else query
+    )
 
-    # 2️⃣ Retrieve documents
+    # Retrieve evidence (TOP-K ONLY)
     docs: List[Document] = retrieve(translated_query, k=max_chunks)
 
     if not docs:
-        return "⚠️ No relevant documents found for your query."
+        return "No relevant evidence was found for this query."
 
-    # 3️⃣ Build answer
-    answer_lines = []
-    seen = set()
+    #  Analyst-style synthesis (FAST + STRUCTURED)
+    insights = []
+    sources = set()
 
     for doc in docs:
         text = doc.page_content.strip()
-        if text in seen:
-            continue
-        seen.add(text)
+        source = os.path.basename(doc.metadata.get("source", "Unknown"))
 
-        sentences = [s.strip() for s in text.split(".") if len(s.strip()) > 10]
-        for s in sentences:
-            answer_lines.append(
-                f"{s}. (Source: {os.path.basename(doc.metadata.get('source',''))})"
-            )
+        if text and text not in insights:
+            insights.append(text)
+            sources.add(source)
 
-    answer = "\n".join(answer_lines[:6])
+        # Early stop for speed
+        if len(insights) >= 3:
+            break
 
-    # 4️⃣ Translate answer back to user language
-    if user_lang and user_lang != "en":
-        answer = GoogleTranslator(
+    #  Build professional insight
+    insight_text = (
+        "Our analysis indicates that:\n\n"
+        + "\n".join(
+            f"- {s.split('.')[0].strip()}."
+            for s in insights
+            if len(s) > 40
+        )
+    )
+
+    #  Evidence block
+    sources_text = "\n".join(f"• {src}" for src in sorted(sources))
+
+    evaluation_text = (
+        f"Answer grounded in {len(sources)} independent source(s)."
+    )
+
+    final_answer = f"""
+{insight_text}
+
+---
+
+**Sources**
+{sources_text}
+
+---
+
+*{evaluation_text}*
+"""
+
+    #  Translate back ONLY once (critical speed win)
+    if user_lang != "en":
+        final_answer = GoogleTranslator(
             source="en", target=user_lang
-        ).translate(answer)
+        ).translate(final_answer)
 
-    return answer
+    return final_answer.strip()

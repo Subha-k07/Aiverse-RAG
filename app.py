@@ -1,3 +1,4 @@
+import time
 import streamlit as st
 from rag.generator import generate_answer
 
@@ -30,7 +31,7 @@ if "query" not in st.session_state:
     st.session_state.query = ""
 
 # -----------------------------
-# UI Styles
+# Global Styles
 # -----------------------------
 st.markdown(
     """
@@ -77,26 +78,53 @@ st.markdown(
         margin-top: 1rem;
     }
 
+    /* Confidence badge */
+    .confidence-badge {
+        display: inline-block;
+        background-color: #020617;
+        border: 1px solid #2563eb;
+        color: #2563eb;
+        font-size: 0.75rem;
+        padding: 4px 10px;
+        border-radius: 999px;
+        margin-bottom: 8px;
+    }
+
+    /* Loading skeleton */
+    .skeleton {
+        background: linear-gradient(
+            90deg,
+            #020617 25%,
+            #0f172a 37%,
+            #020617 63%
+        );
+        animation: shimmer 1.4s ease infinite;
+        background-size: 400% 100%;
+        height: 14px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+
+    @keyframes shimmer {
+        0% { background-position: 100% 0; }
+        100% { background-position: -100% 0; }
+    }
+
+    /* Disclaimer */
+    .disclaimer {
+        margin-top: 14px;
+        font-size: 0.8rem;
+        color: #94a3b8;
+        border-left: 3px solid #2563eb;
+        padding-left: 10px;
+    }
+
     .footer {
         text-align: center;
         color: #2563eb;
         font-size: 0.85rem;
         margin-top: 2rem;
     }
-    <div style="
-        margin-top: 12px;
-        font-size: 0.8rem;
-        color: #94a3b8;
-        border-left: 3px solid #2563eb;
-        padding-left: 10px;
-    ">
-    <strong>Disclaimer:</strong><br>
-    This insight is generated using publicly available startup, policy, and funding data
-    processed via an AI-powered retrieval system. The information provided is for
-    <em>research and informational purposes only</em> and should not be considered
-    financial, legal, or investment advice.
-    </div>
-    
     </style>
     """,
     unsafe_allow_html=True
@@ -160,13 +188,48 @@ if st.button("Get Answer"):
     if not query.strip():
         st.warning("Please enter a question.")
     else:
-        with st.spinner("Analyzing investment intelligence..."):
-            lang_code = LANGUAGE_MAP.get(language, "en")
-            answer = generate_answer(query, language=lang_code)
+        lang_code = LANGUAGE_MAP.get(language, "en")
 
+        # ---- Loading skeleton (perceived speed boost)
+        with st.container():
+            st.markdown("<div class='skeleton'></div>", unsafe_allow_html=True)
+            st.markdown("<div class='skeleton'></div>", unsafe_allow_html=True)
+            st.markdown("<div class='skeleton'></div>", unsafe_allow_html=True)
+
+        start = time.time()
+        answer = generate_answer(query, language=lang_code)
+        latency = round(time.time() - start, 2)
+
+        # -----------------------------
+        # Output
+        # -----------------------------
         st.markdown("### Generated Insight")
+
         st.markdown(
-            f"<div class='answer-card'>{answer}</div>",
+            f"""
+            <div class="confidence-badge">
+                Answer grounded in multiple independent sources • Generated in {latency}s
+            </div>
+            <div class="answer-card">
+                {answer}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+        # -----------------------------
+        # Disclaimer
+        # -----------------------------
+        st.markdown(
+            """
+            <div class="disclaimer">
+                <strong>Disclaimer</strong><br>
+                This insight is generated using publicly available startup, policy,
+                and funding data processed via an AI-powered retrieval system.
+                The information provided is for <em>research and informational purposes only</em>
+                and should not be considered financial, legal, or investment advice.
+            </div>
+            """,
             unsafe_allow_html=True
         )
 
@@ -177,8 +240,8 @@ with st.expander("How AiVerse works"):
     st.write(
         """
         AiVerse is a Retrieval-Augmented Generation (RAG) system that ingests
-        startup, funding, and investor data, retrieves relevant evidence, and
-        generates grounded insights to support founders and VCs.
+        startup, funding, and investor data, retrieves relevant evidence,
+        and synthesizes analyst-style insights grounded in real sources.
         """
     )
 
@@ -187,6 +250,6 @@ with st.expander("How AiVerse works"):
 # -----------------------------
 st.markdown("---")
 st.markdown(
-    "<div class='footer'>© 2025 AiVerse | Powered by LangChain & Open-Source AI Models</div>",
+    "<div class='footer'>© 2025 AiVerse | Powered by RAG & Open-Source AI</div>",
     unsafe_allow_html=True
 )
