@@ -25,7 +25,7 @@ LANGUAGE_MAP = {
 }
 
 # -----------------------------
-# Suggested Questions
+# Suggested Questions (per language)
 # -----------------------------
 SUGGESTED_QUESTIONS = {
     "en": [
@@ -73,25 +73,49 @@ if "query" not in st.session_state:
     st.session_state.query = ""
 
 # -----------------------------
-# Ocean Theme CSS (FINAL)
+# OCEAN THEME CSS (FINAL)
 # -----------------------------
 st.markdown("""
 <style>
 
-/* App background */
+/* GLOBAL */
 .stApp {
-    background-color: #ffffff;
+    background: #ffffff;
     color: #0f172a;
     font-family: "Inter", sans-serif;
 }
+div[role="radiogroup"] label div span {
+    color: #1e40af !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
+}
 
-/* Header */
+/* Animated wave header */
 .wave-header {
-    background: linear-gradient(180deg, #e0f2fe 0%, #ffffff 100%);
-    border-radius: 20px;
-    padding: 40px 32px;
+    background: linear-gradient(180deg, #e0f2fe, #ffffff);
+    border-radius: 18px;
+    padding: 40px 30px;
     text-align: center;
-    margin-bottom: 32px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+}
+
+.wave-header::after {
+    content: "";
+    position: absolute;
+    width: 200%;
+    height: 120px;
+    left: -50%;
+    bottom: -60px;
+    background: radial-gradient(circle at 50% 50%, #38bdf8 0%, transparent 70%);
+    animation: wave 8s linear infinite;
+    opacity: 0.25;
+}
+
+@keyframes wave {
+    from { transform: translateX(0); }
+    to { transform: translateX(50%); }
 }
 
 /* Titles */
@@ -104,21 +128,12 @@ st.markdown("""
 .subtitle {
     color: #334155;
     font-size: 0.95rem;
-    margin-top: 8px;
+    margin-top: 6px;
 }
 
-/* RADIO — FINAL FIX */
-[data-testid="stRadio"] {
-    background: #f0f9ff;
-    padding: 12px 16px;
-    border-radius: 12px;
-    border: 1px solid #93c5fd;
-}
-
-[data-testid="stRadio"] span {
-    color: #1e3a8a !important;
-    font-weight: 600 !important;
-    opacity: 1 !important;
+/* Radio */
+label {
+    color: #0f172a !important;
 }
 
 /* Suggested buttons */
@@ -140,17 +155,38 @@ div.stButton > button:hover {
 input {
     background: #f8fafc !important;
     color: #0f172a !important;
-    border: 1.5px solid #2563eb !important;
-    border-radius: 12px !important;
+    border: 1px solid #2563eb !important;
+    border-radius: 10px !important;
 }
 
 /* Answer card */
 .answer-card {
     background: #f0f9ff;
-    border: 1.5px solid #2563eb;
-    border-radius: 16px;
-    padding: 22px;
-    margin-top: 16px;
+    border: 1px solid #2563eb;
+    border-radius: 14px;
+    padding: 20px;
+    margin-top: 14px;
+    color: #0f172a;
+}
+
+/* Badge */
+.confidence-badge {
+    display: inline-block;
+    color: #2563eb;
+    font-size: 0.75rem;
+    border: 1px solid #2563eb;
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+}
+
+/* Disclaimer */
+.disclaimer {
+    font-size: 0.8rem;
+    color: #334155;
+    border-left: 4px solid #38bdf8;
+    padding-left: 12px;
+    margin-top: 18px;
 }
 
 /* Footer */
@@ -158,20 +194,20 @@ input {
     text-align: center;
     color: #64748b;
     font-size: 0.8rem;
-    margin-top: 36px;
+    margin-top: 32px;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
 # -----------------------------
-# Header
+# HEADER
 # -----------------------------
 st.markdown("""
 <div class="wave-header">
     <div class="title">AiVerse – AI Investment Intelligence Analyst</div>
     <div class="subtitle">
-        Multilingual, source-grounded insights for founders & VCs
+        Source-grounded investment insights from fragmented startup & funding data
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -185,8 +221,8 @@ language = st.radio(
     horizontal=True
 )
 
-lang_code = LANGUAGE_MAP.get(language, "en")
-questions = SUGGESTED_QUESTIONS.get(lang_code, SUGGESTED_QUESTIONS["en"])
+lang_code = LANGUAGE_MAP[language]
+questions = SUGGESTED_QUESTIONS[lang_code]
 
 # -----------------------------
 # Suggested Queries
@@ -199,12 +235,15 @@ c3, c4 = st.columns(2)
 with c1:
     if st.button(questions[0]):
         st.session_state.query = questions[0]
+
 with c2:
     if st.button(questions[1]):
         st.session_state.query = questions[1]
+
 with c3:
     if st.button(questions[2]):
         st.session_state.query = questions[2]
+
 with c4:
     if st.button(questions[3]):
         st.session_state.query = questions[3]
@@ -229,15 +268,34 @@ if st.button("Get Answer"):
 
         st.markdown("### Generated Insight")
 
-        st.markdown(
-            f"""
+        st.markdown(f"""
+            <div class="confidence-badge">
+                Grounded in multiple sources · {latency}s
+            </div>
             <div class="answer-card">
-                <strong>Generated in {latency}s</strong><br><br>
                 {answer}
             </div>
-            """,
-            unsafe_allow_html=True
-        )
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+            <div class="disclaimer">
+                <strong>Disclaimer</strong><br>
+                Generated using a Retrieval-Augmented Generation (RAG) system over
+                public startup, funding, and policy documents.
+                For research and informational purposes only.
+            </div>
+        """, unsafe_allow_html=True)
+
+# -----------------------------
+# How RAG Works
+# -----------------------------
+with st.expander("How the RAG model works"):
+    st.write("""
+    • Your query is translated (if needed) into English  
+    • Relevant documents are retrieved using semantic search  
+    • Evidence is synthesized into an analyst-style insight  
+    • Citations are preserved to ensure traceability
+    """)
 
 # -----------------------------
 # Footer
