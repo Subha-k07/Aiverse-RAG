@@ -1,5 +1,5 @@
 import streamlit as st
-from rag.generator import generate_answer  # keep your existing generator
+from rag.generator import generate_answer
 
 # -------------------------------------------------
 # Page Config
@@ -12,25 +12,24 @@ st.set_page_config(
 )
 
 # -------------------------------------------------
-# Global Styles (WHITE + BLUE OCEAN THEME)
+# FORCE OVERRIDE STREAMLIT STYLES
 # -------------------------------------------------
 st.markdown(
     """
     <style>
-    /* App background */
+
+    /* ---------- GLOBAL ---------- */
     .stApp {
         background-color: #ffffff;
         color: #0f172a;
     }
 
-    /* Main content width */
     .main .block-container {
         max-width: 1100px;
-        padding-left: 2rem;
-        padding-right: 2rem;
+        padding: 2rem;
     }
 
-    /* Header card */
+    /* ---------- HERO ---------- */
     .hero {
         background: linear-gradient(135deg, #e0f2fe, #f8fafc);
         border-radius: 20px;
@@ -43,7 +42,6 @@ st.markdown(
         color: #1d4ed8;
         font-size: 2.3rem;
         font-weight: 700;
-        margin-bottom: 0.6rem;
     }
 
     .hero p {
@@ -51,18 +49,28 @@ st.markdown(
         font-size: 1rem;
     }
 
-    /* Section titles */
-    h2 {
-        color: #1e3a8a;
-        font-weight: 600;
-        margin-top: 2rem;
+    /* ---------- RADIO (CRITICAL FIX) ---------- */
+    div[role="radiogroup"] label {
+        opacity: 1 !important;
     }
 
-    /* Suggested question buttons */
+    div[role="radiogroup"] label span {
+        color: #0f172a !important;   /* DARK TEXT */
+        font-size: 1rem !important;
+        font-weight: 600 !important;
+        opacity: 1 !important;
+    }
+
+    div[role="radiogroup"] input:checked + div span {
+        color: #1d4ed8 !important;   /* BLUE WHEN SELECTED */
+        font-weight: 700 !important;
+    }
+
+    /* ---------- BUTTONS ---------- */
     div.stButton > button {
         background-color: #f8fafc !important;
         color: #1d4ed8 !important;
-        border: 1.5px solid #3b82f6 !important;
+        border: 2px solid #3b82f6 !important;
         border-radius: 14px;
         height: 90px;
         width: 100%;
@@ -75,55 +83,42 @@ st.markdown(
         background-color: #e0f2fe !important;
     }
 
-    /* Radio labels – FIXED VISIBILITY */
-    div[role="radiogroup"] label span {
-        color: #1e3a8a !important;
-        font-weight: 500 !important;
-        opacity: 1 !important;
-        font-size: 0.95rem;
-    }
-
-    div[role="radiogroup"] label:hover span {
-        color: #2563eb !important;
-    }
-
-    div[role="radiogroup"] input:checked + div span {
-        color: #1d4ed8 !important;
-        font-weight: 600 !important;
-    }
-
-    /* Answer card */
+    /* ---------- ANSWER CARD ---------- */
     .answer-card {
-        border: 1px solid #3b82f6;
         background-color: #f8fafc;
+        color: #0f172a;
+        border: 2px solid #3b82f6;
         border-radius: 16px;
         padding: 20px;
-        margin-top: 1.2rem;
+        margin-top: 1.5rem;
+        font-size: 0.95rem;
+        line-height: 1.6;
     }
 
-    /* Disclaimer */
+    /* ---------- DISCLAIMER ---------- */
     .disclaimer {
-        margin-top: 14px;
+        margin-top: 16px;
         font-size: 0.8rem;
-        color: #475569;
-        border-left: 3px solid #3b82f6;
+        color: #334155;
+        border-left: 4px solid #3b82f6;
         padding-left: 12px;
     }
 
-    /* Footer */
+    /* ---------- FOOTER ---------- */
     .footer {
         text-align: center;
         color: #64748b;
         font-size: 0.8rem;
         margin-top: 3rem;
     }
+
     </style>
     """,
     unsafe_allow_html=True
 )
 
 # -------------------------------------------------
-# Hero Section
+# HERO
 # -------------------------------------------------
 st.markdown(
     """
@@ -136,7 +131,7 @@ st.markdown(
 )
 
 # -------------------------------------------------
-# Language Selection
+# LANGUAGE
 # -------------------------------------------------
 LANGUAGE_MAP = {
     "English": "en",
@@ -149,14 +144,12 @@ LANGUAGE_MAP = {
 
 language = st.radio(
     "Select language",
-    options=list(LANGUAGE_MAP.keys()),
+    list(LANGUAGE_MAP.keys()),
     horizontal=True
 )
 
-st.caption("🌐 Multilingual intelligence · Native-language queries supported")
-
 # -------------------------------------------------
-# Suggested Questions
+# SUGGESTED QUESTIONS
 # -------------------------------------------------
 SUGGESTED_QUESTIONS = {
     "en": [
@@ -177,24 +170,6 @@ SUGGESTED_QUESTIONS = {
         "पिछले 2 वर्षों में समान स्टार्टअप्स में किन VCs ने निवेश किया?",
         "फंडेड स्टार्टअप्स में मजबूत PMF के संकेत क्या हैं?",
     ],
-    "te": [
-        "భారతదేశంలో ప్రారంభ దశ AI స్టార్టప్‌లలో పెట్టుబడి పెట్టేవారు ఎవరు?",
-        "భారతీయ FinTech స్టార్టప్‌లలో కొత్త పెట్టుబడి ధోరణులు ఏమిటి?",
-        "గత 2 సంవత్సరాల్లో సమాన స్టార్టప్‌లలో పెట్టుబడి పెట్టిన VCs ఎవరు?",
-        "ఫండింగ్ పొందిన స్టార్టప్‌లకు బలమైన PMF సంకేతాలు ఏమిటి?",
-    ],
-    "ml": [
-        "ഇന്ത്യയിലെ പ്രാരംഭ ഘട്ട AI സ്റ്റാർട്ടപ്പുകളിൽ നിക്ഷേപിക്കുന്നവർ ആരെല്ലാം?",
-        "ഇന്ത്യൻ FinTech സ്റ്റാർട്ടപ്പുകളിൽ ഉയർന്ന് വരുന്ന നിക്ഷേപ പ്രവണതകൾ എന്തൊക്കെയാണ്?",
-        "കഴിഞ്ഞ 2 വർഷങ്ങളിൽ സമാന സ്റ്റാർട്ടപ്പുകളിൽ നിക്ഷേപിച്ച VCs ആരെല്ലാം?",
-        "ഫണ്ടിംഗ് നേടിയ സ്റ്റാർട്ടപ്പുകൾക്ക് ശക്തമായ PMF സൂചനകൾ എന്തൊക്കെയാണ്?",
-    ],
-    "kn": [
-        "ಭಾರತದಲ್ಲಿ ಆರಂಭಿಕ ಹಂತದ AI ಸ್ಟಾರ್ಟ್‌ಅಪ್‌ಗಳಲ್ಲಿ ಹೂಡಿಕೆ ಮಾಡುವವರು ಯಾರು?",
-        "ಭಾರತೀಯ FinTech ಸ್ಟಾರ್ಟ್‌ಅಪ್‌ಗಳಲ್ಲಿ ಕಾಣಿಸಿಕೊಳ್ಳುತ್ತಿರುವ ಹೂಡಿಕೆ ಪ್ರವೃತ್ತಿಗಳು ಯಾವುವು?",
-        "ಕಳೆದ 2 ವರ್ಷಗಳಲ್ಲಿ ಸಮಾನ ಸ್ಟಾರ್ಟ್‌ಅಪ್‌ಗಳಲ್ಲಿ ಹೂಡಿಕೆ ಮಾಡಿದ VCs ಯಾರು?",
-        "ಹೂಡಿಕೆ ಪಡೆದ ಸ್ಟಾರ್ಟ್‌ಅಪ್‌ಗಳಿಗೆ ಬಲವಾದ PMF ಸೂಚನೆಗಳು ಯಾವುವು?",
-    ],
 }
 
 lang_code = LANGUAGE_MAP[language]
@@ -202,37 +177,37 @@ lang_code = LANGUAGE_MAP[language]
 st.markdown("## Suggested intelligence queries")
 
 cols = st.columns(2)
-selected_question = None
-
+selected = None
 for i, q in enumerate(SUGGESTED_QUESTIONS[lang_code]):
     with cols[i % 2]:
         if st.button(q):
-            selected_question = q
+            selected = q
 
 # -------------------------------------------------
-# Question Input
+# QUESTION INPUT
 # -------------------------------------------------
 question = st.text_input(
     "Enter your question",
-    value=selected_question if selected_question else "",
-    placeholder="Ask about investors, funding patterns, or startup intelligence…"
+    value=selected if selected else ""
 )
 
 # -------------------------------------------------
-# Generate Answer
+# ANSWER
 # -------------------------------------------------
 if st.button("Get Answer") and question:
-    with st.spinner("Analyzing sources and generating insight…"):
+    with st.spinner("Analyzing sources…"):
         answer = generate_answer(question, lang_code)
 
-    st.markdown(f"<div class='answer-card'>{answer}</div>", unsafe_allow_html=True)
+    st.markdown(
+        f"<div class='answer-card'>{answer}</div>",
+        unsafe_allow_html=True
+    )
 
     st.markdown(
         """
         <div class="disclaimer">
-        <strong>Disclaimer:</strong><br>
         Generated using a Retrieval-Augmented Generation (RAG) system over public
-        startup, funding, and policy documents. For research and informational purposes only.
+        startup, funding, and policy documents.
         </div>
         """,
         unsafe_allow_html=True
@@ -241,15 +216,15 @@ if st.button("Get Answer") and question:
     with st.expander("How the RAG model works"):
         st.markdown(
             """
-            1. Relevant startup, funding, and policy documents are retrieved  
-            2. Contextual chunks are ranked using semantic similarity  
-            3. The answer is generated strictly from retrieved sources  
-            4. Citations are preserved for transparency
+            • Retrieves relevant startup & funding documents  
+            • Ranks context using semantic similarity  
+            • Generates answers strictly from retrieved sources  
+            • Preserves grounding & citations
             """
         )
 
 # -------------------------------------------------
-# Footer
+# FOOTER
 # -------------------------------------------------
 st.markdown(
     "<div class='footer'>© 2025 AiVerse · Retrieval-Augmented Intelligence</div>",
