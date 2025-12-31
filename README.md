@@ -1,66 +1,180 @@
-AiVerse is an AI-powered Retrieval-Augmented Generation (RAG) application that enables users to ask natural-language questions over large collections of policy, startup, and governance documents.
-It retrieves the most relevant information using vector search and generates grounded, source-backed answers through an intuitive web interface.
-This project was built as part of a hackathon / learning initiative to demonstrate a production-style RAG pipeline using open-source tools.
-Key Features
-1.Semantic Search (FAISS) for fast and accurate document retrieval
-2.Retrieval-Augmented Generation (RAG) architecture
-3.Multi-language query support (English, Hindi, Tamil, Telugu, Malayalam, Kannada)
-4.Source-aware answers derived from ingested documents
-5.Clean, professional UI (White & Blue theme)
-6.Cloud deployment using Streamlit Cloud
-7.Fully open-source stack
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-WORKFLOW
-User Query
-   ↓
-Streamlit UI (app.py)
-   ↓
-Query Translation (deep-translator)
-   ↓
-FAISS Vector Search (retriever.py)
-   ↓
-Relevant Document Chunks
-   ↓
-Answer Synthesis (generator.py)
-   ↓
-Final Answer (with sources)
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-TECHO STACK 
-Frontend
-Streamlit – UI & interaction
-Backend / AI
-LangChain – RAG pipeline
-FAISS – Vector database
-Sentence-Transformers – Embeddings
-deep-translator – Multilingual support
-Language & Tools
-Python 3.10+
-Hugging Face models
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-How the RAG Pipeline Works
-1.Documents are ingested (PDFs, CSVs, web pages)
-2.Text is cleaned and chunked
-3.Chunks are converted to embeddings
-4.Embeddings are stored in FAISS
-5.User queries are embedded and matched
-6.Top relevant chunks are retrieved
-7.A final answer is synthesized from retrieved context
-Open-source libraries only
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-Multi-Language Support
-AiVerse supports user queries in multiple Indian languages.
-The flow is:
-User enters query in chosen language
-Query is translated to English
-Retrieval happens in English
-Final answer is translated back to the selected language
-This enables inclusive access to policy information.
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-Deployment
-The application is deployed using Streamlit Cloud, enabling:
-Free hosting for hackathons
-Direct GitHub integration
-Zero DevOps overhead
 
-Live App:
-https://aiverse-rag-assistant11.streamlit.app/
+# AiVerse – AI Investment Intelligence Analyst
+
+AiVerse is a multilingual, Retrieval-Augmented Generation (RAG) system designed to deliver **source-grounded investment intelligence** from fragmented startup, funding, and policy data. It acts as an AI analyst that helps founders, investors, and researchers extract actionable insights from unstructured documents.
+
+The system is optimized for hackathon and real-world use, focusing on explainability, multilingual access, and clean user experience.
+
+---
+
+## Problem Statement
+
+The startup ecosystem generates vast amounts of information across funding articles, policy documents, investor reports, and news platforms. This data is:
+
+* Highly fragmented
+* Largely unstructured
+* Time-consuming to analyze manually
+
+Founders struggle to identify the right investors and trends, while VCs face difficulty synthesizing signals across multiple sources.
+
+---
+
+## Solution Overview
+
+AiVerse solves this by combining semantic retrieval with large language models to provide:
+
+* Analyst-style answers grounded in real documents
+* Multilingual query support
+* Transparent, traceable insights
+* A single-page, clean interface suitable for rapid exploration
+
+---
+
+## Key Features
+
+* Retrieval-Augmented Generation (RAG) architecture
+* Multilingual support (English, Tamil, Hindi, Telugu, Malayalam, Kannada)
+* Suggested intelligence queries per language
+* Source-grounded answers (no hallucinated insights)
+* Clean, single-page Streamlit UI
+* Mobile-friendly and desktop-optimized layout
+* Designed for startup, VC, and policy intelligence use cases
+
+---
+
+## How the RAG System Works
+
+1. User submits a query in any supported language
+2. Query is normalized and translated if required
+3. Relevant documents are retrieved using semantic search
+4. Retrieved evidence is passed to the LLM
+5. The model generates a concise, analyst-style response
+6. Output is presented with contextual grounding and disclaimers
+
+This ensures responses remain factual, explainable, and aligned with the underlying data.
+
+---
+
+## Tech Stack
+
+**Frontend**
+
+* Streamlit
+* Custom CSS for theming and layout control
+
+**Backend**
+
+* Python
+* Retrieval-Augmented Generation pipeline
+* Embedding-based semantic search
+* LLM-based answer synthesis
+
+**Data Sources**
+
+* Startup funding articles
+* Policy documents
+* Public investment reports
+* News and ecosystem analysis
+
+---
+
+## Project Structure
+
+```
+project-root/
+│
+├── app.py                     # Streamlit application
+├── rag/
+│   ├── generator.py           # RAG answer generation logic
+│   ├── retriever.py           # Semantic retrieval layer
+│   └── embeddings.py          # Vector embedding utilities
+│
+├── ingestion/
+│   ├── pdf_loader.py          # PDF ingestion
+│   ├── csv_loader.py          # CSV ingestion
+│   ├── web_loader.py          # Web data ingestion
+│   └── clean_text.py          # Text preprocessing
+│
+├── raw/
+│   ├── funding_articles/      # Source funding data
+│   └── policy_documents/      # Source policy data
+│
+└── README.md
+```
+
+---
+
+## Installation and Setup
+
+1. Clone the repository
+
+   ```
+   git clone <https://github.com/Subha-k07/Aiverse-RAG>
+   cd AIVERSE-RAG
+   ```
+
+2. Create and activate a virtual environment
+
+   ```
+   python -m venv venv
+   source venv/bin/activate
+   ```
+
+3. Install dependencies
+
+   ```
+   pip install -r requirements.txt
+   ```
+
+4. Run the Streamlit app
+
+   ```
+   streamlit run app.py
+   ```
+
+---
+
+## Usage
+
+* Select a language from the multilingual options
+* Choose a suggested query or enter a custom question
+* Click "Get Answer" to receive an analyst-style insight
+* Review the grounded response and disclaimer
+* Explore how the RAG system works using the expandable section
+
+---
+
+## Use Cases
+
+* Startup founders identifying relevant investors
+* VC analysts researching market trends
+* Policy researchers analyzing ecosystem signals
+* Hackathon demos for AI + RAG applications
+* Educational demonstrations of retrieval-based LLM systems
+
+---
+
+## Disclaimer
+
+AiVerse provides AI-generated insights based on publicly available data processed through a Retrieval-Augmented Generation system. The output is intended strictly for research and informational purposes and should not be considered financial, legal, or investment advice.
+
+---
+
+## Future Enhancements
+
+* Source citation links in answers
+* Investor and startup entity profiling
+* Confidence scoring per insight
+* Dynamic document ingestion
+* Advanced filtering by sector and stage
+
+---
+
+## License
+
+This project is released for educational and hackathon use.
+Refer to individual data sources for their respective usage licenses.
+
+---
+
+
