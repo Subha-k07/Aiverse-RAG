@@ -25,6 +25,48 @@ LANGUAGE_MAP = {
 }
 
 # -----------------------------
+# Suggested Queries (Multilingual)
+# -----------------------------
+SUGGESTED_QUERIES = {
+    "en": [
+        "Which investors actively fund early-stage AI startups in India?",
+        "What funding trends are emerging in Indian FinTech startups?",
+        "Which VCs have invested in similar startups over the last 2 years?",
+        "What signals indicate strong product–market fit for funded startups?"
+    ],
+    "ta": [
+        "இந்தியாவில் ஆரம்ப நிலை AI ஸ்டார்ட்அப்புகளில் முதலீடு செய்பவர்கள் யார்?",
+        "இந்திய FinTech ஸ்டார்ட்அப்புகளில் புதிய முதலீட்டு போக்குகள் என்ன?",
+        "கடந்த 2 ஆண்டுகளில் இதே மாதிரியான ஸ்டார்ட்அப்புகளில் முதலீடு செய்த VCs யார்?",
+        "முதலீடு பெற்ற ஸ்டார்ட்அப்புகளில் தயாரிப்பு–மார்க்கெட் பொருத்தம் காட்டும் சிக்னல்கள் என்ன?"
+    ],
+    "hi": [
+        "भारत में शुरुआती चरण के AI स्टार्टअप्स में निवेश करने वाले निवेशक कौन हैं?",
+        "भारतीय FinTech स्टार्टअप्स में उभरते फंडिंग ट्रेंड्स क्या हैं?",
+        "पिछले 2 वर्षों में समान स्टार्टअप्स में किन VCs ने निवेश किया है?",
+        "फंड प्राप्त स्टार्टअप्स में मजबूत प्रोडक्ट–मार्केट फिट के संकेत क्या हैं?"
+    ],
+    "te": [
+        "భారతదేశంలో ప్రారంభ దశ AI స్టార్టప్‌లలో పెట్టుబడి పెట్టే ఇన్వెస్టర్లు ఎవరు?",
+        "భారతీయ FinTech స్టార్టప్‌లలో కొత్త పెట్టుబడి ధోరణులు ఏమిటి?",
+        "గత 2 సంవత్సరాలలో సమానమైన స్టార్టప్‌లలో పెట్టుబడి పెట్టిన VCs ఎవరు?",
+        "నిధులు పొందిన స్టార్టప్‌లలో బలమైన ప్రొడక్ట్–మార్కెట్ ఫిట్ సంకేతాలు ఏమిటి?"
+    ],
+    "ml": [
+        "ഇന്ത്യയിലെ പ്രാരംഭ ഘട്ട AI സ്റ്റാർട്ടപ്പുകളിൽ നിക്ഷേപിക്കുന്ന നിക്ഷേപകർ ആരെല്ലാം?",
+        "ഇന്ത്യൻ FinTech സ്റ്റാർട്ടപ്പുകളിൽ പുതിയ ഫണ്ടിംഗ് ട്രെൻഡുകൾ എന്തൊക്കെയാണ്?",
+        "കഴിഞ്ഞ 2 വർഷങ്ങളിൽ സമാന സ്റ്റാർട്ടപ്പുകളിൽ നിക്ഷേപിച്ച VCs ആരെല്ലാം?",
+        "ഫണ്ടിംഗ് ലഭിച്ച സ്റ്റാർട്ടപ്പുകളിൽ ശക്തമായ പ്രൊഡക്ട്–മാർക്കറ്റ് ഫിറ്റ് സൂചിപ്പിക്കുന്ന സിഗ്നലുകൾ എന്തൊക്കെയാണ്?"
+    ],
+    "kn": [
+        "ಭಾರತದಲ್ಲಿ ಪ್ರಾರಂಭಿಕ ಹಂತದ AI ಸ್ಟಾರ್ಟಪ್‌ಗಳಲ್ಲಿ ಹೂಡಿಕೆ ಮಾಡುವ ಹೂಡಿಕೆದಾರರು ಯಾರು?",
+        "ಭಾರತೀಯ FinTech ಸ್ಟಾರ್ಟಪ್‌ಗಳಲ್ಲಿ ಹೊಸ ಹೂಡಿಕೆ ಪ್ರವೃತ್ತಿಗಳು ಯಾವುವು?",
+        "ಕಳೆದ 2 ವರ್ಷಗಳಲ್ಲಿ ಸಮಾನ ಸ್ಟಾರ್ಟಪ್‌ಗಳಲ್ಲಿ ಹೂಡಿಕೆ ಮಾಡಿದ VCs ಯಾರು?",
+        "ಹೂಡಿಕೆ ಪಡೆದ ಸ್ಟಾರ್ಟಪ್‌ಗಳಲ್ಲಿ ಬಲವಾದ ಪ್ರೊಡಕ್ಟ್–ಮಾರ್ಕೆಟ್ ಫಿಟ್ ಸೂಚನೆಗಳು ಯಾವುವು?"
+    ]
+}
+
+# -----------------------------
 # Session State
 # -----------------------------
 if "query" not in st.session_state:
@@ -52,7 +94,6 @@ st.markdown(
         margin-bottom: 1.5rem;
     }
 
-    /* Suggested question buttons */
     div.stButton > button {
         background-color: #000000 !important;
         color: #2563eb !important;
@@ -69,7 +110,6 @@ st.markdown(
         background-color: #020617 !important;
     }
 
-    /* Answer card */
     .answer-card {
         border: 1px solid #2563eb;
         background-color: #020617;
@@ -78,7 +118,6 @@ st.markdown(
         margin-top: 1rem;
     }
 
-    /* Confidence badge */
     .confidence-badge {
         display: inline-block;
         background-color: #020617;
@@ -90,14 +129,8 @@ st.markdown(
         margin-bottom: 8px;
     }
 
-    /* Loading skeleton */
     .skeleton {
-        background: linear-gradient(
-            90deg,
-            #020617 25%,
-            #0f172a 37%,
-            #020617 63%
-        );
+        background: linear-gradient(90deg,#020617 25%,#0f172a 37%,#020617 63%);
         animation: shimmer 1.4s ease infinite;
         background-size: 400% 100%;
         height: 14px;
@@ -110,7 +143,6 @@ st.markdown(
         100% { background-position: -100% 0; }
     }
 
-    /* Disclaimer */
     .disclaimer {
         margin-top: 14px;
         font-size: 0.8rem;
@@ -135,33 +167,9 @@ st.markdown(
 # -----------------------------
 st.markdown("<div class='title'>AiVerse – AI Investment Intelligence Analyst</div>", unsafe_allow_html=True)
 st.markdown(
-    "<div class='subtitle'>Turn fragmented startup and funding data into actionable intelligence for founders and VCs</div>",
+    "<div class='subtitle'>Grounded investment insights from fragmented startup & funding data</div>",
     unsafe_allow_html=True
 )
-
-# -----------------------------
-# Suggested Questions
-# -----------------------------
-st.markdown("**Suggested intelligence queries**")
-
-q1, q2 = st.columns(2)
-q3, q4 = st.columns(2)
-
-with q1:
-    if st.button("Which investors actively fund early-stage AI startups in India?"):
-        st.session_state.query = "Which investors actively fund early-stage AI startups in India?"
-
-with q2:
-    if st.button("What funding trends are emerging in Indian FinTech startups?"):
-        st.session_state.query = "What funding trends are emerging in Indian FinTech startups?"
-
-with q3:
-    if st.button("Which VCs have invested in similar startups over the last 2 years?"):
-        st.session_state.query = "Which VCs have invested in similar startups over the last 2 years?"
-
-with q4:
-    if st.button("What signals indicate strong product–market fit for funded startups?"):
-        st.session_state.query = "What signals indicate strong product–market fit for funded startups?"
 
 # -----------------------------
 # Language Selector
@@ -172,13 +180,29 @@ language = st.radio(
     horizontal=True
 )
 
+lang_code = LANGUAGE_MAP.get(language, "en")
+
+# -----------------------------
+# Suggested Queries
+# -----------------------------
+st.markdown("**Suggested intelligence queries**")
+
+queries = SUGGESTED_QUERIES.get(lang_code, SUGGESTED_QUERIES["en"])
+c1, c2 = st.columns(2)
+c3, c4 = st.columns(2)
+
+for col, text in zip([c1, c2, c3, c4], queries):
+    with col:
+        if st.button(text):
+            st.session_state.query = text
+
 # -----------------------------
 # Query Input
 # -----------------------------
 query = st.text_input(
     "Enter your question",
     value=st.session_state.query,
-    placeholder="Ask about investors, funding trends, or startup intelligence..."
+    placeholder="Ask about investors, funding patterns, or startup intelligence..."
 )
 
 # -----------------------------
@@ -188,9 +212,6 @@ if st.button("Get Answer"):
     if not query.strip():
         st.warning("Please enter a question.")
     else:
-        lang_code = LANGUAGE_MAP.get(language, "en")
-
-        # ---- Loading skeleton (perceived speed boost)
         with st.container():
             st.markdown("<div class='skeleton'></div>", unsafe_allow_html=True)
             st.markdown("<div class='skeleton'></div>", unsafe_allow_html=True)
@@ -200,15 +221,11 @@ if st.button("Get Answer"):
         answer = generate_answer(query, language=lang_code)
         latency = round(time.time() - start, 2)
 
-        # -----------------------------
-        # Output
-        # -----------------------------
         st.markdown("### Generated Insight")
-
         st.markdown(
             f"""
             <div class="confidence-badge">
-                Answer grounded in multiple independent sources • Generated in {latency}s
+                Grounded in retrieved sources • Generated in {latency}s
             </div>
             <div class="answer-card">
                 {answer}
@@ -217,31 +234,31 @@ if st.button("Get Answer"):
             unsafe_allow_html=True
         )
 
-        # -----------------------------
-        # Disclaimer
-        # -----------------------------
         st.markdown(
             """
             <div class="disclaimer">
                 <strong>Disclaimer</strong><br>
-                This insight is generated using publicly available startup, policy,
-                and funding data processed via an AI-powered retrieval system.
-                The information provided is for <em>research and informational purposes only</em>
-                and should not be considered financial, legal, or investment advice.
+                This output is generated using a Retrieval-Augmented Generation (RAG)
+                system over publicly available startup, funding, and policy documents.
+                It is intended for <em>research and analytical purposes only</em> and
+                should not be treated as financial or investment advice.
             </div>
             """,
             unsafe_allow_html=True
         )
 
 # -----------------------------
-# How it works
+# How the RAG model works
 # -----------------------------
-with st.expander("How AiVerse works"):
+with st.expander("How the RAG model works"):
     st.write(
         """
-        AiVerse is a Retrieval-Augmented Generation (RAG) system that ingests
-        startup, funding, and investor data, retrieves relevant evidence,
-        and synthesizes analyst-style insights grounded in real sources.
+        1. The user query is converted into an embedding and matched against a FAISS
+           vector index built from startup, funding, and policy documents.
+        2. The retriever selects the most semantically relevant evidence chunks.
+        3. The generator synthesizes an analyst-style insight strictly grounded in
+           the retrieved sources.
+        4. Source provenance is preserved to minimize hallucinations and improve trust.
         """
     )
 
@@ -250,6 +267,6 @@ with st.expander("How AiVerse works"):
 # -----------------------------
 st.markdown("---")
 st.markdown(
-    "<div class='footer'>© 2025 AiVerse | Powered by RAG & Open-Source AI</div>",
+    "<div class='footer'>© 2025 AiVerse | Powered by Retrieval-Augmented Generation</div>",
     unsafe_allow_html=True
 )
